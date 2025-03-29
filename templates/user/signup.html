@@ -1,0 +1,64 @@
+{% extends 'user/base_auth.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Create an Account | DCAdmin{% endblock %}
+
+{% block content %}
+<div class="card w-full max-w-lg shadow-xl bg-base-100 p-6 rounded-2xl">
+    <h2 class="text-2xl font-bold text-center text-primary">Create an Account</h2>
+    <form method="POST" class="mt-4 space-y-4" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- User Form Fields -->
+        <div class="form-control">
+            <label class="label"><span class="label-text">Email</span></label>
+            {{ user_form.email|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text">Password</span></label>
+            {{ user_form.password1|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text">Confirm Password</span></label>
+            {{ user_form.password2|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <!-- Profile Form Fields -->
+        <div class="form-control">
+            <label class="label"><span class="label-text">First Name</span></label>
+            {{ profile_form.first_name|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text">Middle Name</span></label>
+            {{ profile_form.middle_name|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text">Last Name</span></label>
+            {{ profile_form.last_name|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text">Gender</span></label>
+            {{ profile_form.gender|add_class:"select select-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text">Birthday</span></label>
+            {{ profile_form.birthday|add_class:"input input-bordered w-full" }}
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{{ profile_form.avatar.label }}</span>
+            </label>
+            <input id="{{ profile_form.avatar.id_for_label }}" type="file" />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full mt-4">Sign Up</button>
+    </form>
+</div>
+{% endblock %}

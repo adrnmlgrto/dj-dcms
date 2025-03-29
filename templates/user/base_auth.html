@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Styles (DaisyUI 5 + Tailwind CSS) -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- HTMX -->
+    <script src="{% static 'js/htmx.min.js' %}"></script>
+</head>
+<body class="bg-base-200 text-base-content">
+
+    <!-- Page Content -->
+    <main id="page-container" class="flex justify-center items-center min-h-screen px-4">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

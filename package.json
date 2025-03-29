@@ -1,0 +1,19 @@
+{
+  "name": "dj-dcms",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i static/css/app.css -o static/css/style.css",
+    "build:css:prod": "npx @tailwindcss/cli -i static/css/app.css -o static/css/style.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.15",
+    "daisyui": "^5.0.9",
+    "tailwindcss": "^4.0.15"
+  }
+}

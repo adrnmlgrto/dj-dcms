@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:17
+    container_name: postgres-db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: django-docker
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    entrypoint: ["/entrypoint.sh"]
+    command: ["uv", "run", "manage.py", "runserver", "0.0.0.0:8000"]
+
+volumes:
+  postgres_data:

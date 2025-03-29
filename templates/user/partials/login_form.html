@@ -1,0 +1,42 @@
+<form method="post" class="space-y-4" autocomplete="off">
+    {% csrf_token %}
+
+    <label for="username" class="floating-label">
+        <span>Email</span>
+        <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="mail@site.com"
+            class="input input-md w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            value="{{ form.username.value|default:'' }}"
+            required />
+    </label>
+
+    <label for="password" class="floating-label">
+        <span>Password</span>
+        <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="••••••••••"
+            class="input input-md w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            autocomplete="off"
+            required />
+    </label>
+
+    <button type="submit" id="login-btn" class="btn btn-primary w-full">
+        <span id="btn-text">Login</span>
+        <span id="loading-spinner" class="loading loading-dots loading-md hidden ml-2"></span>
+    </button>
+</form>
+
+<!-- Forgot Password -->
+<div class="mt-6 text-center">
+    <a href="#" class="text-sm text-primary hover:underline">Forgot Password?</a>
+</div>
+
+<!-- Signup Redirect for No Accounts -->
+<div class="mt-2 text-center">
+    <p class="text-sm text-base-content">Don't have an account? <a href="{% url 'signup' %}" class="text-primary hover:underline">Sign up</a></p>
+</div>

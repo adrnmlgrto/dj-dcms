@@ -1,0 +1,22 @@
+{% extends 'user/base_auth.html' %}
+
+{% load static %}
+
+{% block title %}Login - DCAdmin{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md p-6 bg-base-100 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold text-center mb-6 text-base-content">DCAdmin Login</h2>
+
+    <!-- Login Form -->
+    {% include 'user/partials/login_form.html' %}
+
+</div>
+
+<!-- JavaScript -->
+<script src="{% static 'js/user/login.js' %}"></script>
+
+<!-- Toast Errors -->
+{% include 'user/partials/toast_form_errors.html' %}
+
+{% endblock %}
