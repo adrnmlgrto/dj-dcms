@@ -1,105 +1,59 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html
+  lang="en"
+  x-data="{ loading: true }"
+  x-init="() => {
+    // Initial load complete
+    window.addEventListener('load', () => loading = false);
+
+    // Handle link clicks
+    document.querySelectorAll('a[href]:not([href^=\'#\']):not([target]):not([data-no-loader])')
+      .forEach(link => link.addEventListener('click', () => loading = true));
+
+    // Handle back/forward navigation
+    window.addEventListener('pageshow', (event) => {
+      // If page is loaded from cache (back/forward), ensure loading is false
+      if (event.persisted) {
+        loading = false;
+      }
+    });
+  }"
+>
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}DCMS{% endblock %}</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}DCAdmin{% endblock %}</title>
+  <!-- HTMX -->
+  <script src="{% static 'js/htmx.min.js' %}"></script>
 
-    <!-- DaisyUI -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <!-- AlpineJS -->
+  <script defer src="{% static 'js/alpine.min.js' %}"></script>
 
-    <!-- HTMX -->
-    <script src="{% static 'js/htmx.min.js' %}"></script>
+  <!-- Styles (Tailwind CSS) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
+  {% block head %}{% endblock %}
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-    {% if user.is_authenticated %}
-    <!-- Navigation Bar -->
-    <nav class="navbar bg-base-100 shadow-md">
-        <!-- Left: Site Name -->
-        <div class="flex-1">
-            <a href="/" class="btn btn-ghost text-xl">DCAdmin</a>
-        </div>
+  <!-- Full Page Loader Animation -->
+  <div
+    x-show="loading"
+    x-transition.opacity
+    class="fixed inset-0 z-50 flex items-center justify-center bg-white"
+  >
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-500"></div>
+  </div>
 
-        <!-- Right: Avatar Dropdown -->
-        <div class="flex-none">
-            <div class="dropdown dropdown-bottom dropdown-end">
+  <!-- Mounting Point -->
+  <main id="app" x-show="!loading" x-transition.opacity>
+    {% block content %}
+    {% endblock %}
+  </main>
 
-                <!-- Users with Avatar Uploaded -->
-                {% if user.profile.avatar %}
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                    <div class="w-10 rounded full">
-                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="w-10 rounded-full">
-                    </div>
-                </div>
-                {% else %}
-                <!-- Users with No Avatar Uploaded, Uses Placeholders -->
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar avatar-placeholder">
-                    <div class="bg-neutral text-neutral-content w-16 rounded-full">
-                        <span>{{ user.profile.name_initials|upper }}</span>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Menu Dropdown from Profile Picture -->
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40">
-                    <div class="join join-vertical">
-                        <button class="btn join-item justify-start">Button</button>
-                        <button class="btn join-item justify-start">Button</button>
-                        <button class="btn join-item justify-start">Button</button>
-                    </div>
-                    <li>
-                        <a href="#" class="btn btn-sm btn-ghost justify-start">
-                            Profile
-                        </a>
-                    </li>
-                    <li>
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="justify-start w-full text-left">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Layout -->
-    <div class="flex">
-        <!-- Sidebar (Visible on Large Screens) -->
-        <aside class="hidden lg:block w-64 bg-base-200 min-h-screen p-4">
-            <ul class="menu">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            {% block content %}{% endblock %}
-        </main>
-    </div>
-
-    {% else %}
-    <!-- Guest View: Login Prompt -->
-    <div class="grid place-items-center h-screen px-4">
-        <div class="card bg-base-100 shadow-sm w-full max-w-md">
-            <div class="card-body">
-                <h2 class="card-title">Not Logged In</h2>
-                <p>Please log in to continue.</p>
-                <div class="card-actions justify-end">
-                    <a href="{% url 'login' %}" role="button" class="btn btn-primary">Login</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
+  {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -5,4 +5,4 @@ from django.shortcuts import render
 
 @login_required
 def homepage(request: HttpRequest):
-    return render(request, 'base.html')
+    return render(request, 'pages/dashboard/index.html')
