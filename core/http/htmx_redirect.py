@@ -1,8 +1,17 @@
 from django.http import HttpResponseRedirect
 
-
 class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, redirect_to, *args, **kwargs):
+    """
+    HTMX-friendly redirect response that sets HX-Redirect header.
+
+    Usage:
+    ```
+    return HTTPResponseHXRedirect("/target-url/")
+    ```
+    """
+    status_code = 200
+
+    def __init__(self, redirect_to: str, *args, **kwargs):
         super().__init__(redirect_to, *args, **kwargs)
-        self['HX-Redirect'] = self['Location']
-        self.status_code = 200
+        self.headers["HX-Redirect"] = self.headers["Location"]
+        del self.headers["Location"]
