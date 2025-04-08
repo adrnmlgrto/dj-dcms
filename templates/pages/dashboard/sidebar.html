@@ -1,5 +1,6 @@
 <div class="flex h-screen flex-col justify-between border-e border-gray-100 bg-white">
-  <div class="px-4 py-6">
+  <!-- Scrollable Content -->
+  <div class="overflow-y-auto px-4 py-6">
     <span class="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
       Logo
     </span>
@@ -133,88 +134,120 @@
     </ul>
   </div>
 
+  <!-- User Profile with Floating Upward Menu -->
   <div class="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-white">
-    <div class="flex items-center justify-between p-4 hover:bg-gray-50">
-      <a href="#" class="flex flex-1 items-center gap-2">
-        {% if user.profile.avatar %}
-          <img
-            alt="User Avatar"
-            src="{{ user.profile.avatar.url }}"
-            class="size-10 rounded-full object-cover"
-          />
-        {% else %}
-          <span class="grid size-10 place-content-center rounded-full bg-gray-200 text-xs text-gray-600">
-            {{ user.profile.name_initials|upper }}
-          </span>
-        {% endif %}
-        <div>
-          <p class="text-xs">
-            <strong class="block font-medium">{{ user.profile.full_name }}</strong>
-            <span>{{ user.email }}</span>
-          </p>
-        </div>
-      </a>
-
-      <div class="flex items-center gap-1">
-        <!-- Settings Button -->
-        <button
-          type="button"
-          class="group relative flex justify-center rounded-sm p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="size-5 opacity-75"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+    <div
+      x-data="{ open: false }"
+      @click.outside="open = false"
+      class="relative"
+    >
+      <!-- Profile Trigger Button -->
+      <button
+        @click="open = !open"
+        class="flex w-full items-center justify-between p-4 hover:bg-gray-50 cursor-pointer"
+      >
+        <div class="flex flex-1 items-center gap-3">
+          {% if user.profile.avatar %}
+            <img
+              alt="User Avatar"
+              src="{{ user.profile.avatar.url }}"
+              class="size-10 rounded-lg object-cover"
             />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span
-            class="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded-sm bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible"
-          >
-            Settings
-          </span>
-        </button>
-
-        <!-- Logout Button -->
-        <form method="post" action="{% url 'logout' %}" class="group relative">
-          {% csrf_token %}
-          <button
-            type="submit"
-            class="flex justify-center rounded-sm p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="size-5 opacity-75"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-            <span
-              class="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded-sm bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible"
-            >
-              Logout
+          {% else %}
+            <span class="grid size-10 place-content-center rounded-full bg-gray-200 text-xs text-gray-600">
+              {{ user.profile.name_initials|upper }}
             </span>
-          </button>
-        </form>
+          {% endif %}
+          <div class="text-left min-w-0">
+            <p class="text-xs truncate">
+              <strong class="block font-medium text-gray-900 truncate">{{ user.profile.full_name }}</strong>
+              <span class="text-gray-500 truncate">{{ user.email }}</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Animated Chevron Icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="size-5 text-gray-400 ml-4 shrink-0 transition-transform duration-200"
+          :class="{ 'rotate-180': open }"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+
+      <!-- Floating Upward Menu -->
+      <div
+        x-show="open"
+        x-transition:enter="transition ease-out duration-100"
+        x-transition:enter-start="transform opacity-0 translate-y-2"
+        x-transition:enter-end="transform opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-75"
+        x-transition:leave-start="transform opacity-100 translate-y-0"
+        x-transition:leave-end="transform opacity-0 translate-y-2"
+        class="absolute bottom-full left-0 right-0 mb-2 mx-2 overflow-hidden rounded-lg border border-gray-100 bg-white shadow-lg"
+      >
+        <ul class="py-1">
+          <li>
+            <a
+              href="#"
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="size-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              <span>Settings</span>
+            </a>
+          </li>
+
+          <li>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="size-5 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                <span>Logout</span>
+              </button>
+            </form>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
