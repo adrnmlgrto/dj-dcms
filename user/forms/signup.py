@@ -4,6 +4,8 @@ from django import forms
 
 from user.models import Profile, User
 
+__all__ = ['UserCreateForm', 'ProfileCreateForm']
+
 
 class UserCreateForm(forms.Form):
     """

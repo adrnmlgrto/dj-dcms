@@ -1,4 +1,4 @@
-from typing import override, Union
+from typing import Union, override
 
 from django.contrib.auth.views import LoginView
 from django.http import (
@@ -12,7 +12,11 @@ from django.urls import reverse_lazy
 from django.views import View
 
 from core.http import HTTPResponseHXRedirect
-from user.forms import ProfileCreateForm, UserCreateForm
+from user.forms import (
+    CustomAuthenticationForm,
+    ProfileCreateForm,
+    UserCreateForm,
+)
 from user.models import Profile, User
 
 
@@ -20,6 +24,7 @@ class CustomLoginView(LoginView):
     """
     Custom LoginView that redirects authenticated users to the root URL.
     """
+    form_class = CustomAuthenticationForm
     template_name = 'pages/login/index.html'
     redirect_authenticated_user = True
     success_url = reverse_lazy('homepage')
